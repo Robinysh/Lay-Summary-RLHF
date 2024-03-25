@@ -12,7 +12,7 @@ Just run `make`
 
 ### Running python scripts
 
-Run `pdm run <script path>`, e.g. `pdm run src/burrito/main.py`
+Run `pdm run <script path>`, e.g. `pdm run src/burrito/main.py or `pdm run jupyter lab`
 
 ### Adding dependencies
 
