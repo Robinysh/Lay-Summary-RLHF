@@ -1,10 +1,5 @@
-# git clone https://github.com/yuh-zha/AlignScore.git
-# pip install AlignScore/.
-# pip install textstat
-# pip install numpy
-# pip install rouge-score
-# pip install bert-score
-# pip install summac
+# pip install git+https://github.com/yuh-zha/AlignScore.git@main textstat numpy rouge-score bert-score summac  
+# pip install git+https://github.com/harsh-dialpad/AlignScore.git@main textstat numpy rouge-score bert-score summac  
 # python -m spacy download en_core_web_sm
 # wget https://huggingface.co/yzha/AlignScore/resolve/main/AlignScore-base.ckpt -P ./AlignScore
 
