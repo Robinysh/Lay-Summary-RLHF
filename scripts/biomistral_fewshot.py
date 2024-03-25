@@ -1,17 +1,15 @@
-import jsonlines
 import json
+
+import jsonlines
 from openai import OpenAI
-from icecream import ic
 from tqdm import tqdm
-from huggingface_hub import InferenceClient
 
-openai_api_key = "EMPTY"
-openai_api_base = "http://localhost:8000/v1"
+OPENAI_API_KEY = "EMPTY"
+OPENAI_API_BASE = "http://localhost:8000/v1"
 openai_client = OpenAI(
-    api_key=openai_api_key,
-    base_url=openai_api_base,
+    api_key=OPENAI_API_KEY,
+    base_url=OPENAI_API_BASE,
 )
-
 
 
 def write_lines_to_file(file_path, lines):
@@ -21,13 +19,13 @@ def write_lines_to_file(file_path, lines):
     :param file_path: str, the path to the file to be written to
     :param lines: list of str, the lines of text to write to the file
     """
-    with open(file_path, 'w') as file:
+    with open(file_path, "w", encoding="utf-8") as file:
         for line in lines:
-            file.write(line + '\n')
+            file.write(line + "\n")
 
 
 def rephrase_texts(text):
-    prompt = f'''
+    prompt = f"""
     <s>[INST]
     Rephrase the following abstract from a medical paper to make it more accessible and understandable to non-expert audiences, commonly referred to as "lay summaries".
     These lay summaries aim to present the key information from the original articles in a way that is less technical and contains more background information,
@@ -56,39 +54,41 @@ def rephrase_texts(text):
 
     [INST]Abstract: {text}
 
-    Lay summary of abstract: [/INST]'''
+    Lay summary of abstract: [/INST]"""
 
     completion = openai_client.completions.create(
         model="BioMistral/BioMistral-7B-DARE-AWQ-QGS128-W4-GEMM",
         prompt=prompt,
         max_tokens=2048,
         temperature=0.8,
-        top_p=0.95
+        top_p=0.95,
     )
-    ## Assuming the response contains a field 'choices' with the rephrased text
+    # Assuming the response contains a field 'choices' with the rephrased text
     rephrased_text = completion.choices[0].text.strip()
     return rephrased_text
 
 
-if __name__ == '__main__':
-
-    data_folder = '/data/colx531/biolaysumm2024_data/'
-    file_names = ['PLOS_test.jsonl', 'eLife_test.jsonl']
+if __name__ == "__main__":
+    DATA_FOLDER = "/data/colx531/biolaysumm2024_data/"
+    file_names = ["PLOS_test.jsonl", "eLife_test.jsonl"]
 
     for file_name in file_names:
-        with open(data_folder+file_name, 'r') as f:
+        with open(DATA_FOLDER + file_name, "r", encoding="utf-8") as f:
             data = [json.loads(line) for line in f]
 
         for item in data:
-            sections = item['article'].split('\n')
-            item['sections'] = {k: v for k, v in zip(item['headings'], sections)}
-        
+            sections = item["article"].split("\n")
+            item["sections"] = dict(zip(item["headings"], sections))
+
         # Modify OpenAI's API key and API base to use vLLM's API server.
         predictions = []
-        with jsonlines.open(f'prediction_fewshot_BioMistral7B_{file_name.split(".")[0]}.jsonl', mode='w') as writer:
+        with jsonlines.open(
+            f'prediction_fewshot_BioMistral7B_{file_name.split(".", maxsplit=1)[0]}.jsonl',
+            mode="w",
+        ) as writer:
             for item in tqdm(data, leave=True):
                 # Extract abstracts
-                abstract = item['sections']['Abstract']
+                abstract = item["sections"]["Abstract"]
                 # Rephrase abstracts
                 rephrased_abstract = rephrase_texts(abstract)
-                writer.write({'id': item['id'], 'prediction': rephrased_abstract})
+                writer.write({"id": item["id"], "prediction": rephrased_abstract})

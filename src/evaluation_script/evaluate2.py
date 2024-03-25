@@ -1,13 +1,17 @@
+# pylint: skip-file
+
 # !bash ./get_lens.sh
 # !pip install torchtext
 
 
-import os, json
 import argparse
+import json
+import os
+
 import numpy as np
-from lens.lens_score import LENS
 import torch
 import wandb
+from lens.lens_score import LENS
 
 
 def calc_lens(preds, refs, docs):
@@ -50,7 +54,6 @@ def write_scores(score_dict, output_filepath):
             f.write(f"{key}: {value}\n")
 
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--submit_dir", type=str)
@@ -66,7 +69,7 @@ if __name__ == "__main__":
         project=args.wandb_project,
         entity=args.wandb_entity,
         id=args.wandb_run_id,
-        resume="allow"
+        resume="allow",
     )
 
     submit_dir = args.submit_dir
@@ -80,7 +83,7 @@ if __name__ == "__main__":
     elife_scores = evaluate(
         os.path.join(submit_dir, "elife.txt"),
         os.path.join(truth_dir, "eLife_val.jsonl"),
-        "eLife-val"
+        "eLife-val",
     )
     write_scores(elife_scores, os.path.join(output_dir, "elife_scores2.txt"))
 
@@ -90,7 +93,7 @@ if __name__ == "__main__":
     plos_scores = evaluate(
         os.path.join(submit_dir, "plos.txt"),
         os.path.join(truth_dir, "PLOS_val.jsonl"),
-        "PLOS-val"
+        "PLOS-val",
     )
     write_scores(plos_scores, os.path.join(output_dir, "plos_scores2.txt"))
 
@@ -98,7 +101,9 @@ if __name__ == "__main__":
     avg_scores = {}
     metrics = ["LENS"]
     for metric in metrics:
-        avg_scores[f"{metric}-val"] = np.mean([elife_scores[f"eLife-val_{metric}"], plos_scores[f"PLOS-val_{metric}"]])
+        avg_scores[f"{metric}-val"] = np.mean(
+            [elife_scores[f"eLife-val_{metric}"], plos_scores[f"PLOS-val_{metric}"]]
+        )
 
     write_scores(avg_scores, os.path.join(output_dir, "scores2.txt"))
     wandb.finish()

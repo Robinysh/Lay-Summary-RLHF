@@ -1,20 +1,23 @@
-# pip install git+https://github.com/yuh-zha/AlignScore.git@main textstat numpy rouge-score bert-score summac  
-# pip install git+https://github.com/harsh-dialpad/AlignScore.git@main textstat numpy rouge-score bert-score summac  
+# pylint: skip-file
+
+# pip install git+https://github.com/yuh-zha/AlignScore.git@main textstat numpy rouge-score bert-score summac
+# pip install git+https://github.com/harsh-dialpad/AlignScore.git@main textstat numpy rouge-score bert-score summac
 # python -m spacy download en_core_web_sm
 # wget https://huggingface.co/yzha/AlignScore/resolve/main/AlignScore-base.ckpt -P ./AlignScore
 
 
-import os, sys, json
 import argparse
-import textstat
+import json
+import os
+
 import numpy as np
-from rouge_score import rouge_scorer
-from bert_score import score
-import nltk
-from alignscore import AlignScore
+import textstat
 import torch
-from summac.model_summac import SummaCConv
 import wandb
+from alignscore import AlignScore
+from bert_score import score
+from rouge_score import rouge_scorer
+from summac.model_summac import SummaCConv
 
 
 def calc_rouge(preds, refs):
@@ -165,7 +168,17 @@ if __name__ == "__main__":
 
     # Calculate + write overall scores
     avg_scores = {}
-    metrics = ["ROUGE1", "ROUGE2", "ROUGEL", "BERTScore", "FKGL", "DCRS", "CLI", "AlignScore", "SummaC"]
+    metrics = [
+        "ROUGE1",
+        "ROUGE2",
+        "ROUGEL",
+        "BERTScore",
+        "FKGL",
+        "DCRS",
+        "CLI",
+        "AlignScore",
+        "SummaC",
+    ]
     for metric in metrics:
         avg_scores[f"LENS-val_{metric}"] = np.mean(
             [elife_scores[f"eLife-val_{metric}"], plos_scores[f"PLOS-val_{metric}"]]
