@@ -52,7 +52,7 @@ def calc_readability(preds):
 
 def calc_alignscore(preds, docs):
     alignscorer = AlignScore(
-        model="roberta-base",
+        model="distilroberta-base",
         batch_size=8,
         device="cuda:0",
         ckpt_path="../../models/AlignScore-base.ckpt",
@@ -63,7 +63,7 @@ def calc_alignscore(preds, docs):
 
 def cal_summac(preds, docs):
     model_conv = SummaCConv(
-        models=["vitc"],
+        models=["vitc-base"],
         bins="percentile",
         granularity="sentence",
         nli_labels="e",
