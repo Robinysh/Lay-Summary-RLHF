@@ -21,6 +21,7 @@ dependencies = [
     "jsonlines>=4.0.0",
     "openai>=1.14.3",
     "mdformat>=0.7.17",
+    "yq>=3.2.3",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
@@ -37,7 +38,7 @@ pdm-isort.shell = "git ls-files '*.py' | xargs -t pdm run isort -q"
 pdm-black.shell = "git ls-files '*.py' | xargs -t pdm run black -q"
 lint-format-python.composite = ["pdm-autoflake", "pdm-isort", "pdm-black"]
 lint-format-gitignore.shell = "git ls-files '.gitignore' | xargs -tI {} sort -o {} {}"
-lint-format-yaml.shell = "git ls-files '*.yml' '*.yaml' | xargs -t yq -i -S -Y -w 10000 ."
+lint-format-yaml.shell = "git ls-files '*.yml' '*.yaml' | xargs -t pdm run yq -i -S -Y -w 10000 ."
 lint-format-markdown.shell = "git ls-files '*.md' | xargs -t mdformat ."
 lint-format.composite = ["lint-format-python", "lint-format-gitignore", "lint-format-yaml", "lint-format-markdown"]
 pdm-flake8.shell = "git ls-files '*.py' | xargs -t pdm run flake8"
