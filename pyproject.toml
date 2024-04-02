@@ -22,6 +22,15 @@ dependencies = [
     "openai>=1.14.3",
     "mdformat>=0.7.17",
     "yq>=3.2.3",
+    "lens-metric @ git+https://github.com/robinysh/LENS@master#subdirectory=lens",
+    "alignscore @ git+https://github.com/harsh-dialpad/AlignScore.git@main",
+    "textstat>=0.7.3",
+    "numpy>=1.26.4",
+    "rouge-score>=0.1.2",
+    "bert-score>=0.3.13",
+    "summac>=0.0.4",
+    "transformers>=4.35.2",
+    "en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl",
 ]
 requires-python = ">=3.10"
 readme = "README.md"

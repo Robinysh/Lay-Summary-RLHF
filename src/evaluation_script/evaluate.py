@@ -13,11 +13,13 @@ import os
 import numpy as np
 import textstat
 import torch
-import wandb
 from alignscore import AlignScore
 from bert_score import score
+from lens.lens_score import LENS
 from rouge_score import rouge_scorer
 from summac.model_summac import SummaCConv
+
+import wandb
 
 
 def calc_rouge(preds, refs):
@@ -55,7 +57,7 @@ def calc_alignscore(preds, docs):
         model="distilroberta-base",
         batch_size=8,
         device="cuda:0",
-        ckpt_path="../../models/AlignScore-base.ckpt",
+        ckpt_path="/data/colx531/eval_models/AlignScore.ckpt",
         evaluation_mode="nli_sp",
     )
     return np.mean(alignscorer.score(contexts=docs, claims=preds))
@@ -72,6 +74,17 @@ def cal_summac(preds, docs):
         agg="mean",
     )
     return np.mean(model_conv.score(docs, preds)["scores"])
+
+
+def calc_lens(preds, refs, docs, model_path=None):
+    if model_path is None:
+        model_path = "/data/colx531/eval_models/LENS/checkpoints/epoch=5-step=6102.ckpt"
+    metric = LENS(model_path, rescale=True)
+    abstracts = [d.split("\n")[0] for d in docs]
+    refs = [[x] for x in refs]
+
+    scores = metric.score(abstracts, preds, refs, batch_size=8, gpus=1)
+    return np.mean(scores)
 
 
 def read_file_lines(path):
@@ -110,6 +123,7 @@ def evaluate(pred_path, gold_path, dataset_name):
     # Factuality scores
     score_dict[f"{dataset_name}_AlignScore"] = calc_alignscore(preds, docs)
     score_dict[f"{dataset_name}_SummaC"] = cal_summac(preds, docs)
+    score_dict[f"{dataset_name}_LENS"] = cal_summac(preds, docs)
     wandb.log(score_dict)
 
     return score_dict
@@ -127,10 +141,12 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--submit_dir", type=str)
-    parser.add_argument("--truth_dir", type=str)
+    parser.add_argument(
+        "--truth_dir", type=str, default="/data/colx531/biolaysumm2024_data"
+    )
     parser.add_argument("--output_dir", type=str)
-    parser.add_argument("--wandb_project", type=str)
-    parser.add_argument("--wandb_entity", type=str)
+    parser.add_argument("--wandb_project", type=str, default="biolaysummary")
+    parser.add_argument("--wandb_entity", type=str, default="colx-531-team-burrito")
     parser.add_argument("--wandb_name", type=str)
     args = parser.parse_args()
 
@@ -178,9 +194,10 @@ if __name__ == "__main__":
         "CLI",
         "AlignScore",
         "SummaC",
+        "LENS",
     ]
     for metric in metrics:
-        avg_scores[f"LENS-val_{metric}"] = np.mean(
+        avg_scores[f"{metric}-val"] = np.mean(
             [elife_scores[f"eLife-val_{metric}"], plos_scores[f"PLOS-val_{metric}"]]
         )
     write_scores(avg_scores, os.path.join(output_dir, "scores1.txt"))
