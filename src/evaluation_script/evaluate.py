@@ -63,7 +63,7 @@ def calc_alignscore(preds, docs):
     return np.mean(alignscorer.score(contexts=docs, claims=preds))
 
 
-def cal_summac(preds, docs):
+def calc_summac(preds, docs):
     model_conv = SummaCConv(
         models=["vitc-base"],
         bins="percentile",
@@ -122,8 +122,8 @@ def evaluate(pred_path, gold_path, dataset_name):
 
     # Factuality scores
     score_dict[f"{dataset_name}_AlignScore"] = calc_alignscore(preds, docs)
-    score_dict[f"{dataset_name}_SummaC"] = cal_summac(preds, docs)
-    score_dict[f"{dataset_name}_LENS"] = cal_summac(preds, docs)
+    score_dict[f"{dataset_name}_SummaC"] = calc_summac(preds, docs)
+    score_dict[f"{dataset_name}_LENS"] = calc_lens(preds, refs, docs)
     wandb.log(score_dict)
 
     return score_dict
