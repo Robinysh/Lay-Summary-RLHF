@@ -14,4 +14,4 @@ def time_it(name=None) -> Iterator[None]:
         yield
     finally:
         toc: float = time.perf_counter()
-        print(f"Finish {name}: {1000*(toc - tic):.3f}ms")
+        print(f"Finish {name}: {1000 * (toc - tic):.3f}ms")
