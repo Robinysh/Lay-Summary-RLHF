@@ -1,5 +1,6 @@
 import os
 from collections import defaultdict
+from itertools import islice
 
 import bitsandbytes as bnb
 import lightning as L
@@ -33,7 +34,14 @@ LORA_RANK = 32
 # MODEL_NAME = "stabilityai/stablelm-2-zephyr-1_6b"
 MODEL_NAME = "BioMistral/BioMistral-7B-DARE"
 # MODEL_NAME = "M4-ai/tau-0.5B"
-BATCH_SIZE = 1
+BATCH_SIZE = 2
+GRADIENT_ACCUM_STEPS = 4
+
+
+def batcher(iterable, batch_size):
+    iterator = iter(iterable)
+    while batch := list(islice(iterator, batch_size)):
+        yield batch
 
 
 # pylint: disable-next=too-many-instance-attributes
@@ -64,9 +72,10 @@ class PPOLM(L.LightningModule):
             model_name=MODEL_NAME,
             learning_rate=self.lr,
             log_with="wandb",
-            batch_size=BATCH_SIZE,
+            batch_size=BATCH_SIZE * GRADIENT_ACCUM_STEPS,
             mini_batch_size=BATCH_SIZE,
-            optimize_device_cache=True,
+            gradient_accumulation_steps=GRADIENT_ACCUM_STEPS,
+            # optimize_device_cache=True,
         )
 
         # pylint: disable-next=attribute-defined-outside-init
@@ -83,14 +92,15 @@ class PPOLM(L.LightningModule):
         inputs, _, encoded_sents, queries, articles, article_ids = batch
 
         with time_it("generate"):
+            outputs = []
             with torch.no_grad():
-                outputs = self.ppo_trainer.generate(
-                    encoded_sents,
-                    return_prompt=False,
-                    batch_size=BATCH_SIZE,
-                    # use_cache=False,
-                    **self.gen_kwargs,
-                )
+                for minibatch in batcher(encoded_sents, BATCH_SIZE):
+                    outputs += self.ppo_trainer.generate(
+                        minibatch,
+                        return_prompt=False,
+                        # use_cache=False,
+                        **self.gen_kwargs,
+                    )
 
         with time_it("decode"):
             decoded_seqs = self.tokenizer.batch_decode(
@@ -125,11 +135,17 @@ class PPOLM(L.LightningModule):
     def validation_step(self, batch, batch_idx):
         _, _, encoded_sents, queries, articles, article_ids = batch
 
-        outputs = self.ppo_trainer.generate(
-            encoded_sents, return_prompt=False, **self.gen_kwargs
-        )
+        outputs = []
+        with torch.no_grad():
+            for minibatch in batcher(encoded_sents, BATCH_SIZE):
+                outputs += self.ppo_trainer.generate(
+                    minibatch,
+                    return_prompt=False,
+                    # use_cache=False,
+                    **self.gen_kwargs,
+                )
 
-        decoded_seqs = self.tokenizer.batch_decode(outputs, skip_special_tokens=True)
+        decoded_seqs = [self.tokenizer.decode(r.squeeze()) for r in outputs]
 
         if batch_idx % LOG_FREQ == 0:
             self.logger.experiment.log(
@@ -158,7 +174,7 @@ def get_model(model_name, unsloth=False):
                 model_name=base_model_name,
                 max_seq_length=2048,
                 load_in_4bit=True,
-                # quantization_config=bnb_config,
+                quantization_config=bnb_config,
                 device_map="auto",
                 trust_remote_code=True,
             )
@@ -217,6 +233,7 @@ def get_model(model_name, unsloth=False):
         device_map="auto",
         trust_remote_code=True,
         peft_config=peft_config,
+        attn_implementation="flash_attention_2",
     )
     model.gradient_checkpointing_disable()
     return model
@@ -242,7 +259,7 @@ def main():
     dm = AbstractDataModule(
         articles_fpath=ARTICLES_FPATH,
         tokenizer=tokenizer,
-        batch_size=BATCH_SIZE,
+        batch_size=BATCH_SIZE * GRADIENT_ACCUM_STEPS,
         dataset=AbstractDataset,
         collate_fn=decoder_collate,
     )
