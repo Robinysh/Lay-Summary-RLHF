@@ -115,6 +115,20 @@ class Rewarder:
             rescale=True,
         )
 
+        # min max metric values from current and last years leaderbboard.
+        self.metric_stats = {
+            "BERTScore": [0.8255, 0.8707],
+            "ROUGE1": [0.3653, 0.4946],
+            "ROUGE2": [0.0882, 0.1676],
+            "ROUGEL": [0.3362, 0.4615],
+            "FKGL": [10.7, 15.75],
+            "DCRS": [8.45, 11.77],
+            "CLI": [13.25, 17.18],
+            "LENS": [32.77, 74.67],
+            "AlignScore": [0.7152, 0.9865],
+            "SummaC": [0.5655, 0.9536],
+        }
+
     def calc_alignscore(self, preds, docs):
         return self.align_scorer.score(contexts=docs, claims=preds)
 
@@ -133,6 +147,7 @@ class Rewarder:
         )
         return scores
 
+    # pylint: disable=too-many-locals
     def __call__(self, preds, articles):
         score_dict = {}
 
@@ -162,20 +177,26 @@ class Rewarder:
 
         # pipe_outputs = sentiment_pipe(texts, **sent_kwargs)
         # rewards = [torch.tensor(output[1]["score"]) for output in pipe_outputs]
+        norm_score_dict = {}
+        for key, value in score_dict.items():
+            norm_range = self.metric_stats[key][1] - self.metric_stats[key][0]
+            norm_score_dict[key] = [
+                (s - self.metric_stats[key][0]) / norm_range for s in value
+            ]
         reward = [
             (
-                score_dict["ROUGE1"][i]
-                + score_dict["ROUGE2"][i]
-                + score_dict["ROUGEL"][i]
-                + score_dict["BERTScore"][i]
-                - score_dict["FKGL"][i]
-                - score_dict["DCRS"][i]
-                - score_dict["CLI"][i]
-                + score_dict["LENS"][i]
-                + score_dict["AlignScore"][i]
-                + score_dict["SummaC"][i]
+                norm_score_dict["ROUGE1"][i]
+                + norm_score_dict["ROUGE2"][i]
+                + norm_score_dict["ROUGEL"][i]
+                + norm_score_dict["BERTScore"][i]
+                + (1 - norm_score_dict["FKGL"][i])
+                + (1 - norm_score_dict["DCRS"][i])
+                + (1 - norm_score_dict["CLI"][i])
+                + norm_score_dict["LENS"][i]
+                + norm_score_dict["AlignScore"][i]
+                + norm_score_dict["SummaC"][i]
             )
-            / len(score_dict)
+            / len(norm_score_dict)
             for i in range(len(preds))
         ]
         return reward, score_dict
