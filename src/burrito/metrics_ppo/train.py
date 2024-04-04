@@ -4,11 +4,13 @@ from collections import defaultdict
 import bitsandbytes as bnb
 import lightning as L
 import torch
+import trl
 from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.loggers import WandbLogger
 from peft import LoraConfig
 from transformers import AutoTokenizer, BitsAndBytesConfig
 from trl import AutoModelForCausalLMWithValueHead, PPOConfig, PPOTrainer
+from unsloth import FastLanguageModel
 
 from burrito.metrics_ppo.dataloader import (
     AbstractDataModule,
@@ -21,6 +23,7 @@ from burrito.metrics_ppo.utils import time_it
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 torch.set_float32_matmul_precision("medium")
 
+# torch.autograd.set_detect_anomaly(True)
 
 ARTICLES_FPATH = "/data/colx531/biolaysumm2024_data"
 LOG_FREQ = 32
@@ -63,7 +66,7 @@ class PPOLM(L.LightningModule):
             log_with="wandb",
             batch_size=BATCH_SIZE,
             mini_batch_size=BATCH_SIZE,
-            optimize_cuda_cache=True,
+            optimize_device_cache=True,
         )
 
         # pylint: disable-next=attribute-defined-outside-init
@@ -80,12 +83,14 @@ class PPOLM(L.LightningModule):
         inputs, _, encoded_sents, queries, articles, article_ids = batch
 
         with time_it("generate"):
-            outputs = self.ppo_trainer.generate(
-                encoded_sents,
-                return_prompt=False,
-                batch_size=BATCH_SIZE,
-                **self.gen_kwargs,
-            )
+            with torch.no_grad():
+                outputs = self.ppo_trainer.generate(
+                    encoded_sents,
+                    return_prompt=False,
+                    batch_size=BATCH_SIZE,
+                    # use_cache=False,
+                    **self.gen_kwargs,
+                )
 
         with time_it("decode"):
             decoded_seqs = self.tokenizer.batch_decode(
@@ -93,14 +98,13 @@ class PPOLM(L.LightningModule):
             )
 
         if batch_idx % LOG_FREQ == 0:
-            with torch.no_grad():
-                self.logger.experiment.log(
-                    {
-                        "val/generate_predicted": decoded_seqs[0],
-                        "val/generate_answer": queries[0],
-                        "val/filename": article_ids[0],
-                    }
-                )
+            self.logger.experiment.log(
+                {
+                    "train/generate_predicted": decoded_seqs[0],
+                    "train/generate_answer": queries[0],
+                    "train/filename": article_ids[0],
+                }
+            )
 
         with time_it("reward"):
             reward, score_dict = self.rewarder(decoded_seqs, articles)
@@ -128,14 +132,13 @@ class PPOLM(L.LightningModule):
         decoded_seqs = self.tokenizer.batch_decode(outputs, skip_special_tokens=True)
 
         if batch_idx % LOG_FREQ == 0:
-            with torch.no_grad():
-                self.logger.experiment.log(
-                    {
-                        "val/generate_predicted": decoded_seqs[0],
-                        "val/generate_answer": queries[0],
-                        "val/filename": article_ids[0],
-                    }
-                )
+            self.logger.experiment.log(
+                {
+                    "val/generate_predicted": decoded_seqs[0],
+                    "val/generate_answer": queries[0],
+                    "val/filename": article_ids[0],
+                }
+            )
 
         reward, score_dict = self.rewarder(decoded_seqs, articles)
         reward = torch.tensor(reward, dtype=torch.float32).to(self.device)
@@ -147,7 +150,44 @@ class PPOLM(L.LightningModule):
         return optimizer
 
 
-def main():
+def get_model(model_name, unsloth=False):
+    if unsloth:
+
+        def get_unsloth_model(base_model_name):
+            model, _ = FastLanguageModel.from_pretrained(
+                model_name=base_model_name,
+                max_seq_length=2048,
+                load_in_4bit=True,
+                # quantization_config=bnb_config,
+                device_map="auto",
+                trust_remote_code=True,
+            )
+            return FastLanguageModel.get_peft_model(
+                model,
+                target_modules=[
+                    "q_proj",
+                    "v_proj",
+                    "k_proj",
+                    "o_proj",  # attention (self_attn)
+                    "gate_proj",
+                    "down_proj",
+                    "up_proj",  # FFN (mlp)
+                ],
+                r=LORA_RANK,
+                lora_alpha=LORA_ALPHA,
+                # lora_dropout = LORA_DROPOUT,
+                lora_dropout=0,
+                bias="none",
+                use_gradient_checkpointing=False,
+            )
+
+        model = AutoModelForCausalLMWithValueHead.from_pretrained(
+            get_unsloth_model(model_name)
+        )
+        # model.gradient_checkpointing_disable()
+        trl.trainer.peft_module_casting_to_bf16(model)
+        return model
+
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_quant_type="nf4",
@@ -155,7 +195,6 @@ def main():
         bnb_4bit_compute_dtype=torch.bfloat16,
     )
 
-    # model = AutoModelForCausalLM.from_pretrained(
     peft_config = LoraConfig(
         lora_alpha=LORA_ALPHA,
         lora_dropout=LORA_DROPOUT,
@@ -173,22 +212,22 @@ def main():
     )
 
     model = AutoModelForCausalLMWithValueHead.from_pretrained(
-        MODEL_NAME,
+        model_name,
         quantization_config=bnb_config,
         device_map="auto",
         trust_remote_code=True,
         peft_config=peft_config,
     )
+    model.gradient_checkpointing_disable()
+    return model
+
+
+def main():
+    model = get_model(MODEL_NAME)
     tokenizer = AutoTokenizer.from_pretrained(
         MODEL_NAME, trust_remote_code=True, pad_token="</s>"
     )
     tokenizer.pad_token = tokenizer.eos_token
-    # model = prepare_model_for_kbit_training(model)
-
-    # model = get_peft_model(model, peft_config)
-    # model.is_peft_model = True
-    model.gradient_checkpointing_disable()
-    # model.gradient_checkpointing_enable()
 
     wandb_logger = WandbLogger(project="COLX531")
     checkpoint_callback = ModelCheckpoint(
@@ -207,12 +246,13 @@ def main():
         dataset=AbstractDataset,
         collate_fn=decoder_collate,
     )
-    model = PPOLM(model=model, tokenizer=tokenizer, lr=1e-5)
+    model = PPOLM(model=model, tokenizer=tokenizer, lr=1e-6)
     trainer = L.Trainer(
         precision="bf16-true",
         accelerator="cuda",
         logger=wandb_logger,
         val_check_interval=256,
+        limit_val_batches=10,
         log_every_n_steps=LOG_FREQ,
         callbacks=[checkpoint_callback],
     )

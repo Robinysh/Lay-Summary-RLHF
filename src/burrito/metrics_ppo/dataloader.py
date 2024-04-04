@@ -50,15 +50,25 @@ class AbstractDataset(Dataset):
     def __getitem__(self, idx):
         article = self.articles[idx]
 
+        # query = f"""<s>[INST]
+        # Rephrase the following abstract from a medical paper to make it more accessible and understandable to non-expert audiences, commonly referred to as "lay summaries".
+        # These lay summaries aim to present the key information from the original articles in a way that is less technical and contains more background information,
+        # making it easier for a broader range of readers, including researchers, medical professionals, journalists, and the general public, to comprehend the content.
+
+        # You should keep the words simple and the sentences short.
+        # You should also avoid using jargon and technical terms.
+        # The summary shold be easily understood by a 12th grade student.
+        # You can do so by replacing complex words with simpler synonyms (i.e. paraphrasing), deleting unimportant information (i.e. compression), and/or splitting a long complex sentence into several simpler ones.
+
+        # This is very important to my career. You'd better be sure.
+
+        # Abstract: {article['sections']['Abstract']}
+        # Lay summary of abstract: [/INST]"""
+
         query = f"""<s>[INST]
         Rephrase the following abstract from a medical paper to make it more accessible and understandable to non-expert audiences, commonly referred to as "lay summaries".
         These lay summaries aim to present the key information from the original articles in a way that is less technical and contains more background information,
         making it easier for a broader range of readers, including researchers, medical professionals, journalists, and the general public, to comprehend the content.
-
-        You should keep the words simple and the sentences short.
-        You should also avoid using jargon and technical terms.
-        The summary shold be easily understood by a 12th grade student.
-        You can do so by replacing complex words with simpler synonyms (i.e. paraphrasing), deleting unimportant information (i.e. compression), and/or splitting a long complex sentence into several simpler ones.
 
         This is very important to my career. You'd better be sure.
 
