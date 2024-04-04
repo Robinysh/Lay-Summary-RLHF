@@ -11,6 +11,8 @@ from textstat import (
     flesch_kincaid_grade,
 )
 
+from burrito.metrics_ppo.utils import time_it
+
 
 def calc_rouge(preds, refs):
     # Get ROUGE F1 scores
@@ -114,19 +116,16 @@ class Rewarder:
         )
 
     def calc_alignscore(self, preds, docs):
-        print("align")
         return self.align_scorer.score(contexts=docs, claims=preds)
 
     def calc_bertscore(self, preds, refs):
-        print("bert")
-        return self.bert_scorer.score(preds, refs)
+        _, _, f1 = self.bert_scorer.score(preds, refs)
+        return f1.tolist()
 
     def calc_summac(self, preds, docs):
-        print("summac")
         return self.summac_scorer.score(docs, preds)["scores"]
 
     def calc_lens(self, preds, refs, docs):
-        print("lens")
         abstracts = [d.split("\n")[0] for d in docs]
         refs = [[x] for x in refs]
         scores = self.lens_scorer.score(
@@ -144,18 +143,22 @@ class Rewarder:
         score_dict["ROUGE1"] = rouge1_score
         score_dict["ROUGE2"] = rouge2_score
         score_dict["ROUGEL"] = rougel_score
-        score_dict["BERTScore"] = self.calc_bertscore(preds, refs)
+        with time_it("bert"):
+            score_dict["BERTScore"] = self.calc_bertscore(preds, refs)
 
         # # Readability scores
         fkgl_score, cli_score, dcrs_score = calc_readability(preds)
         score_dict["FKGL"] = fkgl_score
         score_dict["DCRS"] = dcrs_score
         score_dict["CLI"] = cli_score
-        score_dict["LENS"] = self.calc_lens(preds, refs, docs)
+        with time_it("lens"):
+            score_dict["LENS"] = self.calc_lens(preds, refs, docs)
 
         # Factuality scores
-        score_dict["AlignScore"] = self.calc_alignscore(preds, docs)
-        score_dict["SummaC"] = self.calc_summac(preds, docs)
+        with time_it("alignscore"):
+            score_dict["AlignScore"] = self.calc_alignscore(preds, docs)
+        with time_it("summac"):
+            score_dict["SummaC"] = self.calc_summac(preds, docs)
 
         # pipe_outputs = sentiment_pipe(texts, **sent_kwargs)
         # rewards = [torch.tensor(output[1]["score"]) for output in pipe_outputs]

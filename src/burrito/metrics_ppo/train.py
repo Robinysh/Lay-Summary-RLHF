@@ -16,6 +16,7 @@ from burrito.metrics_ppo.dataloader import (
     decoder_collate,
 )
 from burrito.metrics_ppo.rewarder import Rewarder
+from burrito.metrics_ppo.utils import time_it
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 torch.set_float32_matmul_precision("medium")
@@ -57,11 +58,12 @@ class PPOLM(L.LightningModule):
 
     def on_fit_start(self) -> None:
         config = PPOConfig(
-            model_name="lvwerra/gpt2-imdb",
+            model_name=MODEL_NAME,
             learning_rate=self.lr,
             log_with="wandb",
             batch_size=BATCH_SIZE,
             mini_batch_size=BATCH_SIZE,
+            optimize_cuda_cache=True,
         )
 
         # pylint: disable-next=attribute-defined-outside-init
@@ -77,11 +79,18 @@ class PPOLM(L.LightningModule):
     def training_step(self, batch, batch_idx):
         inputs, _, encoded_sents, queries, articles, article_ids = batch
 
-        outputs = self.ppo_trainer.generate(
-            encoded_sents, return_prompt=False, **self.gen_kwargs
-        )
+        with time_it("generate"):
+            outputs = self.ppo_trainer.generate(
+                encoded_sents,
+                return_prompt=False,
+                batch_size=BATCH_SIZE,
+                **self.gen_kwargs,
+            )
 
-        decoded_seqs = self.tokenizer.batch_decode(outputs, skip_special_tokens=True)
+        with time_it("decode"):
+            decoded_seqs = self.tokenizer.batch_decode(
+                outputs, skip_special_tokens=True
+            )
 
         if batch_idx % LOG_FREQ == 0:
             with torch.no_grad():
@@ -93,11 +102,17 @@ class PPOLM(L.LightningModule):
                     }
                 )
 
-        reward, score_dict = self.rewarder(decoded_seqs, articles)
+        with time_it("reward"):
+            reward, score_dict = self.rewarder(decoded_seqs, articles)
+            reward = torch.tensor(reward, dtype=torch.float32).to(self.device)
         self.log_dict({f"train/{k}": sum(v) / len(v) for k, v in score_dict.items()})
-        self.log("train/reward", torch.cat(reward).mean())
+        self.log("train/reward", reward.mean())
 
-        stats = self.ppo_trainer.step(encoded_sents, outputs, reward)
+        with time_it("ppo_step"):
+            stats = self.ppo_trainer.step(
+                encoded_sents, outputs, list(torch.split(reward, 1))
+            )
+
         self.ppo_trainer.log_stats(
             stats, inputs | {"response": decoded_seqs, "query": queries}, reward
         )
@@ -123,8 +138,9 @@ class PPOLM(L.LightningModule):
                 )
 
         reward, score_dict = self.rewarder(decoded_seqs, articles)
+        reward = torch.tensor(reward, dtype=torch.float32).to(self.device)
         self.log_dict({f"val/{k}": sum(v) / len(v) for k, v in score_dict.items()})
-        self.log("val/reward", torch.cat(reward).mean())
+        self.log("val/reward", reward.mean())
 
     def configure_optimizers(self):
         optimizer = bnb.optim.Adam8bit(self.parameters(), lr=self.lr)
