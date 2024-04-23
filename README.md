@@ -4,7 +4,9 @@
 **Project**: Lay Summarization of Biomedical Research Articles\
 **Team name**: Burrito\
 **Team members**: Robin Yuen, Mingcong Li, Mandeep, Qihan\
-**Progress Report**: https://www.overleaf.com/4229436693mfczfrsfnqjs#0f9269
+**Progress Report**: https://www.overleaf.com/4229436693mfczfrsfnqjs#0f9269\
+**Final Report**: https://www.overleaf.com/7855576777dxxtdkzxqjqm#2baaf5\
+**Final Presentation**: https://docs.google.com/presentation/d/1eCkfDBo-7w5luYv8XIa4XSphtL0d62zrhBh0s4FVEmw/edit#slide=id.p
 
 ### Setup/Install
 
