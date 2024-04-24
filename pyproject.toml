@@ -31,6 +31,17 @@ dependencies = [
     "summac>=0.0.4",
     "transformers>=4.35.2",
     "en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl",
+    "trl>=0.8.1",
+    "peft>=0.10.0",
+    "bitsandbytes>=0.43.0",
+    "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git",
+    "packaging>=24.0",
+    "ninja>=1.11.1.1",
+    "einops>=0.7.0",
+    "flash-attn==2.5.5",
+    "xformers>=0.0.25.post1",
+    "accelerate>=0.28.0",
+    "jupyterlab>=4.1.5",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
@@ -56,3 +67,8 @@ lint-format.env = {LC_ALL="C"}
 lint.composite = ["pdm-flake8", "pdm-pylint"]
 start.shell = "pdm run python src/burrito/main.py"
 evaluate.shell = "pdm run python src/evaluation_script/evaluate1.py"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "-e file:///${PROJECT_ROOT}/../summac#egg=summac",
+]

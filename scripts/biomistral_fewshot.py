@@ -70,7 +70,7 @@ def rephrase_texts(text):
 
 if __name__ == "__main__":
     DATA_FOLDER = "/data/colx531/biolaysumm2024_data/"
-    file_names = ["PLOS_test.jsonl", "eLife_test.jsonl"]
+    file_names = ["PLOS_val.jsonl", "eLife_val.jsonl"]
 
     for file_name in file_names:
         with open(DATA_FOLDER + file_name, "r", encoding="utf-8") as f:

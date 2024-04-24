@@ -119,11 +119,11 @@ def evaluate(pred_path, gold_path, dataset_name):
     score_dict[f"{dataset_name}_FKGL"] = fkgl_score
     score_dict[f"{dataset_name}_DCRS"] = dcrs_score
     score_dict[f"{dataset_name}_CLI"] = cli_score
-    score_dict[f"{dataset_name}_LENS"] = calc_lens(preds, refs, docs)
 
     # Factuality scores
     score_dict[f"{dataset_name}_AlignScore"] = calc_alignscore(preds, docs)
     score_dict[f"{dataset_name}_SummaC"] = calc_summac(preds, docs)
+    score_dict[f"{dataset_name}_LENS"] = calc_lens(preds, refs, docs)
     wandb.log(score_dict)
 
     return score_dict
