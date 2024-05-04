@@ -1,16 +1,18 @@
-# COLX_531_Burrito
+# Lay Summary Optimization with RLHF
 
-**Class**: COLX 531 - Natural Language Generation\
-**Project**: Lay Summarization of Biomedical Research Articles\
-**Team name**: Burrito\
-**Team members**: Robin Yuen, Mingcong Li, Mandeep, Qihan\
-**Progress Report**: https://www.overleaf.com/4229436693mfczfrsfnqjs#0f9269  
-**Final Report**: https://www.overleaf.com/7855576777dxxtdkzxqjqm#2baaf5  
-**Final Presentation**: https://docs.google.com/presentation/d/1eCkfDBo-7w5luYv8XIa4XSphtL0d62zrhBh0s4FVEmw/edit#slide=id.p
+Lay summary optimization with biomistral using PPO on metrics
+
+**Task URL:** https://biolaysumm.org/
+
+**Tech Stack:** pdm, pytorch lightning, unsloth, huggingface, mistral, trl, wandb, github actions
 
 ### Setup/Install
 
-Just run `make`
+Run `make`
+
+### Train
+
+Run `pdm start`
 
 ### Running python scripts
 

@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:7baceee5242c49053533fd0e07e6a0d0258eb243e0540a985bc0876f281bdeff"
+content_hash = "sha256:d92f9fcc1fec22c3a080918eab4ef352555e19ed56bb6086df1e769989af4b69"
 
 [[package]]
 name = "absl-py"
@@ -3747,6 +3747,20 @@ groups = ["default"]
 files = [
     {file = "setuptools-69.2.0-py3-none-any.whl", hash = "sha256:c21c49fb1042386df081cb5d86759792ab89efca84cf114889191cd09aacc80c"},
     {file = "setuptools-69.2.0.tar.gz", hash = "sha256:0ff4183f8f42cd8fa3acea16c45205521a4ef28f73c6391d8a25e92893134f2e"},
+]
+
+[[package]]
+name = "sglang"
+version = "0.1.14"
+requires_python = ">=3.8"
+summary = "A structured generation langauge for LLMs."
+groups = ["default"]
+dependencies = [
+    "requests",
+]
+files = [
+    {file = "sglang-0.1.14-py3-none-any.whl", hash = "sha256:6fda7a728b4386c476fd6596935e8f29bb116de8bb11937ee6389b01eb04ea86"},
+    {file = "sglang-0.1.14.tar.gz", hash = "sha256:d76134d6d51303a04ad0707f22715a026fce29c8444524360ab4b1dd8521bb60"},
 ]
 
 [[package]]

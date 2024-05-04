@@ -42,6 +42,7 @@ dependencies = [
     "xformers>=0.0.25.post1",
     "accelerate>=0.28.0",
     "jupyterlab>=4.1.5",
+    "sglang>=0.1.14",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
@@ -65,7 +66,7 @@ pdm-flake8.shell = "git ls-files '*.py' | xargs -t pdm run flake8"
 pdm-pylint.shell = "git ls-files '*.py' | xargs -t pdm run pylint"
 lint-format.env = {LC_ALL="C"}
 lint.composite = ["pdm-flake8", "pdm-pylint"]
-start.shell = "pdm run python src/burrito/main.py"
+start.shell = "pdm run python src/burrito/metrics_ppo/train.py"
 evaluate.shell = "pdm run python src/evaluation_script/evaluate1.py"
 
 [tool.pdm.dev-dependencies]

@@ -31,8 +31,8 @@ def multi_dimension_rephrase(s, metrics_prompts):
         "Rephrase the following text from the same biomedical paper to make it more accessible and understandable to non-expert audiences, commonly referred to as 'lay summaries'."
     )
     forks = s.fork(len(metrics_prompts))
-    for i in range(len(metrics_prompts)):
-        forks[i] += sgl.user(metrics_prompts[i] + "\n Answer:")
+    for i, prompt in enumerate(metrics_prompts):
+        forks[i] += sgl.user(prompt + "\n Answer:")
         forks[i] += sgl.assistant(
             sgl.gen("generate", max_tokens=2048, temperature=0.8, top_p=0.95)
         )
@@ -46,6 +46,7 @@ def multi_dimension_rephrase(s, metrics_prompts):
     s += sgl.assistant(sgl.gen("merge", max_tokens=2048, temperature=0.8, top_p=0.95))
 
 
+# pylint: disable=redefined-outer-name
 def rephrase_texts(abstract):
     metrics_prompts = [
         f"USER: Given the abstract of a biomedical paper, generate a summary paragraph that is easy to read and understand and is optimized for the following metrics: Flesch-Kincaid Grade Level (FKGL), Dale-Chall Readability Score (DCRS), Coleman–Liau index (CLI), Learnable Evaluation Metric for Text Simplification (LENS). Use simple language and short sentences. The summary should be suitable for a broad audience, ensuring that it is accessible to 12th grade readers. Focus on clarity and conciseness. \nAbstract: {abstract} \n ASSISTANT: below is a readable lay summary of this abstract: </s>",
