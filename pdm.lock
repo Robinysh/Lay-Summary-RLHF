@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:d92f9fcc1fec22c3a080918eab4ef352555e19ed56bb6086df1e769989af4b69"
+content_hash = "sha256:d6dcd468be15a9b25ae08117ccc8d91612d849ca12095dbe7909697b932d9d07"
 
 [[package]]
 name = "absl-py"
@@ -492,7 +492,7 @@ name = "certifi"
 version = "2024.2.2"
 requires_python = ">=3.6"
 summary = "Python package for providing Mozilla's CA Bundle."
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "certifi-2024.2.2-py3-none-any.whl", hash = "sha256:dc383c07b76109f368f6106eee2b593b04a011ea4d55f652c6ca24a754d1cdd1"},
     {file = "certifi-2024.2.2.tar.gz", hash = "sha256:0569859f95fc761b18b45ef421b1290a0f65f147e92a1e5eb3e635f9a5e4e66f"},
@@ -548,7 +548,7 @@ name = "charset-normalizer"
 version = "3.3.2"
 requires_python = ">=3.7.0"
 summary = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "charset-normalizer-3.3.2.tar.gz", hash = "sha256:f30c3cb33b24454a82faecaf01b19c18562b1e89558fb6c56de4d9118a032fd5"},
     {file = "charset_normalizer-3.3.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:25baf083bf6f6b341f4121c2f3c548875ee6f5339300e08be3f2b2ba1721cdd3"},
@@ -604,7 +604,7 @@ name = "click"
 version = "8.1.7"
 requires_python = ">=3.7"
 summary = "Composable command line interface toolkit"
-groups = ["default", "dev"]
+groups = ["default"]
 dependencies = [
     "colorama; platform_system == \"Windows\"",
 ]
@@ -632,7 +632,7 @@ name = "colorama"
 version = "0.4.6"
 requires_python = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
 summary = "Cross-platform colored terminal text."
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
@@ -929,7 +929,7 @@ name = "filelock"
 version = "3.13.3"
 requires_python = ">=3.8"
 summary = "A platform independent file lock."
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "filelock-3.13.3-py3-none-any.whl", hash = "sha256:5ffa845303983e7a0b7ae17636509bc97997d58afeafa72fb141a17b152284cb"},
     {file = "filelock-3.13.3.tar.gz", hash = "sha256:a79895a25bbefdf55d1a2a0a80968f7dbb28edcd6d4234a0afb3f37ecde4b546"},
@@ -1074,7 +1074,7 @@ name = "fsspec"
 version = "2023.10.0"
 requires_python = ">=3.8"
 summary = "File-system specification"
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "fsspec-2023.10.0-py3-none-any.whl", hash = "sha256:346a8f024efeb749d2a5fca7ba8854474b1ff9af7c3faaf636a4548781136529"},
     {file = "fsspec-2023.10.0.tar.gz", hash = "sha256:330c66757591df346ad3091a53bd907e15348c2ba17d63fd54f5c39c4457d2a5"},
@@ -1211,7 +1211,7 @@ name = "huggingface-hub"
 version = "0.22.2"
 requires_python = ">=3.8.0"
 summary = "Client library to download and publish models, datasets and other repos on the huggingface.co hub"
-groups = ["default", "dev"]
+groups = ["default"]
 dependencies = [
     "filelock",
     "fsspec>=2023.5.0",
@@ -1247,7 +1247,7 @@ name = "idna"
 version = "3.6"
 requires_python = ">=3.5"
 summary = "Internationalized Domain Names in Applications (IDNA)"
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "idna-3.6-py3-none-any.whl", hash = "sha256:c05567e9c24a6b9faaa835c4821bad0590fbb9d5779e7caa6e1cc4978e7eb24f"},
     {file = "idna-3.6.tar.gz", hash = "sha256:9ecdbbd083b06798ae1e86adcbfe8ab1479cf864e4ee30fe4e46a003d12491ca"},
@@ -1347,7 +1347,7 @@ name = "jinja2"
 version = "3.1.3"
 requires_python = ">=3.7"
 summary = "A very fast and expressive template engine."
-groups = ["default", "dev"]
+groups = ["default"]
 dependencies = [
     "MarkupSafe>=2.0",
 ]
@@ -1361,7 +1361,7 @@ name = "joblib"
 version = "1.3.2"
 requires_python = ">=3.7"
 summary = "Lightweight pipelining with Python functions"
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "joblib-1.3.2-py3-none-any.whl", hash = "sha256:ef4331c65f239985f3f2220ecc87db222f08fd22097a3dd5698f693875f8cbb9"},
     {file = "joblib-1.3.2.tar.gz", hash = "sha256:92f865e621e17784e7955080b6d042489e3b8e294949cc44c6eac304f59772b1"},
@@ -1888,7 +1888,7 @@ name = "markupsafe"
 version = "2.1.5"
 requires_python = ">=3.7"
 summary = "Safely add untrusted strings to HTML/XML markup."
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "MarkupSafe-2.1.5-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:a17a92de5231666cfbe003f0e4b9b3a7ae3afb1ec2845aadc2bacc93ff85febc"},
     {file = "MarkupSafe-2.1.5-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:72b6be590cc35924b02c78ef34b467da4ba07e4e0f0454a2c5907f473fc50ce5"},
@@ -2031,7 +2031,7 @@ files = [
 name = "mpmath"
 version = "1.3.0"
 summary = "Python library for arbitrary-precision floating-point arithmetic"
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "mpmath-1.3.0-py3-none-any.whl", hash = "sha256:a0b2b9fe80bbcd81a6647ff13108738cfb482d481d826cc0e02f5b35e5c88d2c"},
     {file = "mpmath-1.3.0.tar.gz", hash = "sha256:7a28eb2a9774d00c7bc92411c19a89209d5da7c4c9a9e227be8330a23a25b91f"},
@@ -2232,7 +2232,7 @@ name = "networkx"
 version = "3.2.1"
 requires_python = ">=3.9"
 summary = "Python package for creating and manipulating graphs and networks"
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "networkx-3.2.1-py3-none-any.whl", hash = "sha256:f18c69adc97877c42332c170849c96cefa91881c99a7cb3e95b7c659ebdc1ec2"},
     {file = "networkx-3.2.1.tar.gz", hash = "sha256:9f1bb5cf3409bf324e0a722c20bdb4c20ee39bf1c30ce8ae499c8502b0b5e0c6"},
@@ -2266,7 +2266,7 @@ name = "nltk"
 version = "3.8.1"
 requires_python = ">=3.7"
 summary = "Natural Language Toolkit"
-groups = ["default", "dev"]
+groups = ["default"]
 dependencies = [
     "click",
     "joblib",
@@ -2297,7 +2297,7 @@ name = "numpy"
 version = "1.26.4"
 requires_python = ">=3.9"
 summary = "Fundamental package for array computing in Python"
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "numpy-1.26.4-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:9ff0f4f29c51e2803569d7a51c2304de5554655a60c5d776e35b4a41413830d0"},
     {file = "numpy-1.26.4-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:2e4ee3380d6de9c9ec04745830fd9e2eccb3e6cf790d39d7b98ffd19b0dd754a"},
@@ -2334,7 +2334,7 @@ name = "nvidia-cublas-cu12"
 version = "12.1.3.1"
 requires_python = ">=3"
 summary = "CUBLAS native runtime libraries"
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "platform_system == \"Linux\" and platform_machine == \"x86_64\""
 files = [
     {file = "nvidia_cublas_cu12-12.1.3.1-py3-none-manylinux1_x86_64.whl", hash = "sha256:ee53ccca76a6fc08fb9701aa95b6ceb242cdaab118c3bb152af4e579af792728"},
@@ -2346,7 +2346,7 @@ name = "nvidia-cuda-cupti-cu12"
 version = "12.1.105"
 requires_python = ">=3"
 summary = "CUDA profiling tools runtime libs."
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "platform_system == \"Linux\" and platform_machine == \"x86_64\""
 files = [
     {file = "nvidia_cuda_cupti_cu12-12.1.105-py3-none-manylinux1_x86_64.whl", hash = "sha256:e54fde3983165c624cb79254ae9818a456eb6e87a7fd4d56a2352c24ee542d7e"},
@@ -2358,7 +2358,7 @@ name = "nvidia-cuda-nvrtc-cu12"
 version = "12.1.105"
 requires_python = ">=3"
 summary = "NVRTC native runtime libraries"
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "platform_system == \"Linux\" and platform_machine == \"x86_64\""
 files = [
     {file = "nvidia_cuda_nvrtc_cu12-12.1.105-py3-none-manylinux1_x86_64.whl", hash = "sha256:339b385f50c309763ca65456ec75e17bbefcbbf2893f462cb8b90584cd27a1c2"},
@@ -2370,7 +2370,7 @@ name = "nvidia-cuda-runtime-cu12"
 version = "12.1.105"
 requires_python = ">=3"
 summary = "CUDA Runtime native Libraries"
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "platform_system == \"Linux\" and platform_machine == \"x86_64\""
 files = [
     {file = "nvidia_cuda_runtime_cu12-12.1.105-py3-none-manylinux1_x86_64.whl", hash = "sha256:6e258468ddf5796e25f1dc591a31029fa317d97a0a94ed93468fc86301d61e40"},
@@ -2382,7 +2382,7 @@ name = "nvidia-cudnn-cu12"
 version = "8.9.2.26"
 requires_python = ">=3"
 summary = "cuDNN runtime libraries"
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "platform_system == \"Linux\" and platform_machine == \"x86_64\""
 dependencies = [
     "nvidia-cublas-cu12",
@@ -2396,7 +2396,7 @@ name = "nvidia-cufft-cu12"
 version = "11.0.2.54"
 requires_python = ">=3"
 summary = "CUFFT native runtime libraries"
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "platform_system == \"Linux\" and platform_machine == \"x86_64\""
 files = [
     {file = "nvidia_cufft_cu12-11.0.2.54-py3-none-manylinux1_x86_64.whl", hash = "sha256:794e3948a1aa71fd817c3775866943936774d1c14e7628c74f6f7417224cdf56"},
@@ -2408,7 +2408,7 @@ name = "nvidia-curand-cu12"
 version = "10.3.2.106"
 requires_python = ">=3"
 summary = "CURAND native runtime libraries"
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "platform_system == \"Linux\" and platform_machine == \"x86_64\""
 files = [
     {file = "nvidia_curand_cu12-10.3.2.106-py3-none-manylinux1_x86_64.whl", hash = "sha256:9d264c5036dde4e64f1de8c50ae753237c12e0b1348738169cd0f8a536c0e1e0"},
@@ -2420,7 +2420,7 @@ name = "nvidia-cusolver-cu12"
 version = "11.4.5.107"
 requires_python = ">=3"
 summary = "CUDA solver native runtime libraries"
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "platform_system == \"Linux\" and platform_machine == \"x86_64\""
 dependencies = [
     "nvidia-cublas-cu12",
@@ -2437,7 +2437,7 @@ name = "nvidia-cusparse-cu12"
 version = "12.1.0.106"
 requires_python = ">=3"
 summary = "CUSPARSE native runtime libraries"
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "platform_system == \"Linux\" and platform_machine == \"x86_64\""
 dependencies = [
     "nvidia-nvjitlink-cu12",
@@ -2452,7 +2452,7 @@ name = "nvidia-nccl-cu12"
 version = "2.19.3"
 requires_python = ">=3"
 summary = "NVIDIA Collective Communication Library (NCCL) Runtime"
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "platform_system == \"Linux\" and platform_machine == \"x86_64\""
 files = [
     {file = "nvidia_nccl_cu12-2.19.3-py3-none-manylinux1_x86_64.whl", hash = "sha256:a9734707a2c96443331c1e48c717024aa6678a0e2a4cb66b2c364d18cee6b48d"},
@@ -2463,7 +2463,7 @@ name = "nvidia-nvjitlink-cu12"
 version = "12.4.99"
 requires_python = ">=3"
 summary = "Nvidia JIT LTO Library"
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "platform_system == \"Linux\" and platform_machine == \"x86_64\""
 files = [
     {file = "nvidia_nvjitlink_cu12-12.4.99-py3-none-manylinux2014_aarch64.whl", hash = "sha256:75d6498c96d9adb9435f2bbdbddb479805ddfb97b5c1b32395c694185c20ca57"},
@@ -2476,7 +2476,7 @@ name = "nvidia-nvtx-cu12"
 version = "12.1.105"
 requires_python = ">=3"
 summary = "NVIDIA Tools Extension"
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "platform_system == \"Linux\" and platform_machine == \"x86_64\""
 files = [
     {file = "nvidia_nvtx_cu12-12.1.105-py3-none-manylinux1_x86_64.whl", hash = "sha256:dc21cf308ca5691e7c04d962e213f8a4aa9bbfa23d95412f452254c2caeb09e5"},
@@ -2519,7 +2519,7 @@ name = "packaging"
 version = "24.0"
 requires_python = ">=3.7"
 summary = "Core utilities for Python packages"
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "packaging-24.0-py3-none-any.whl", hash = "sha256:2ddfb553fdf02fb784c234c7ba6ccc288296ceabec964ad2eae3777778130bc5"},
     {file = "packaging-24.0.tar.gz", hash = "sha256:eb82c5e3e56209074766e6885bb04b8c38a0c015d0a30036ebe7ece34c9989e9"},
@@ -2775,7 +2775,7 @@ name = "protobuf"
 version = "4.25.3"
 requires_python = ">=3.8"
 summary = ""
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "protobuf-4.25.3-cp310-abi3-win32.whl", hash = "sha256:d4198877797a83cbfe9bffa3803602bbe1625dc30d8a097365dbc762e5790faa"},
     {file = "protobuf-4.25.3-cp310-abi3-win_amd64.whl", hash = "sha256:209ba4cc916bab46f64e56b85b090607a676f66b473e6b762e6f1d9d591eb2e8"},
@@ -3133,7 +3133,7 @@ name = "pyyaml"
 version = "6.0.1"
 requires_python = ">=3.6"
 summary = "YAML parser and emitter for Python"
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "PyYAML-6.0.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d858aa552c999bc8a8d57426ed01e40bef403cd8ccdd0fc5f6f04a00414cac2a"},
     {file = "PyYAML-6.0.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:fd66fc5d0da6d9815ba2cebeb4205f95818ff4b79c3ebe268e75d961704af52f"},
@@ -3248,7 +3248,7 @@ name = "regex"
 version = "2023.12.25"
 requires_python = ">=3.7"
 summary = "Alternative regular expression module, to replace re."
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "regex-2023.12.25-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:0694219a1d54336fd0445ea382d49d36882415c0134ee1e8332afd1529f0baa5"},
     {file = "regex-2023.12.25-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:b014333bd0217ad3d54c143de9d4b9a3ca1c5a29a6d0d554952ea071cff0f1f8"},
@@ -3304,7 +3304,7 @@ name = "requests"
 version = "2.31.0"
 requires_python = ">=3.7"
 summary = "Python HTTP for Humans."
-groups = ["default", "dev"]
+groups = ["default"]
 dependencies = [
     "certifi>=2017.4.17",
     "charset-normalizer<4,>=2",
@@ -3478,7 +3478,7 @@ name = "safetensors"
 version = "0.4.2"
 requires_python = ">=3.7"
 summary = ""
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "safetensors-0.4.2-cp310-cp310-macosx_10_12_x86_64.whl", hash = "sha256:69d8bb8384dc2cb5b72c36c4d6980771b293d1a1377b378763f5e37b6bb8d133"},
     {file = "safetensors-0.4.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:3d420e19fcef96d0067f4de4699682b4bbd85fc8fea0bd45fcd961fdf3e8c82c"},
@@ -3633,7 +3633,7 @@ files = [
 name = "sentencepiece"
 version = "0.2.0"
 summary = "SentencePiece python wrapper"
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "sentencepiece-0.2.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:188779e1298a1c8b8253c7d3ad729cb0a9891e5cef5e5d07ce4592c54869e227"},
     {file = "sentencepiece-0.2.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:bed9cf85b296fa2b76fc2547b9cbb691a523864cebaee86304c43a7b4cb1b452"},
@@ -3944,10 +3944,10 @@ files = [
 [[package]]
 name = "summac"
 version = "0.0.4"
-editable = true
-path = "../summac"
+git = "https://github.com/Robinysh/summac"
+revision = "15713e0da4c746a4b9d5518f017219808913def0"
 summary = ""
-groups = ["default", "dev"]
+groups = ["default"]
 dependencies = [
     "huggingface-hub",
     "nltk>=3.6.6",
@@ -3962,7 +3962,7 @@ name = "sympy"
 version = "1.12"
 requires_python = ">=3.8"
 summary = "Computer algebra system (CAS) in Python"
-groups = ["default", "dev"]
+groups = ["default"]
 dependencies = [
     "mpmath>=0.19",
 ]
@@ -4114,7 +4114,7 @@ name = "tokenizers"
 version = "0.15.2"
 requires_python = ">=3.7"
 summary = ""
-groups = ["default", "dev"]
+groups = ["default"]
 dependencies = [
     "huggingface-hub<1.0,>=0.16.4",
 ]
@@ -4223,7 +4223,7 @@ name = "torch"
 version = "2.2.2"
 requires_python = ">=3.8.0"
 summary = "Tensors and Dynamic neural networks in Python with strong GPU acceleration"
-groups = ["default", "dev"]
+groups = ["default"]
 dependencies = [
     "filelock",
     "fsspec",
@@ -4304,7 +4304,7 @@ name = "tqdm"
 version = "4.66.2"
 requires_python = ">=3.7"
 summary = "Fast, Extensible Progress Meter"
-groups = ["default", "dev"]
+groups = ["default"]
 dependencies = [
     "colorama; platform_system == \"Windows\"",
 ]
@@ -4329,7 +4329,7 @@ name = "transformers"
 version = "4.39.3"
 requires_python = ">=3.8.0"
 summary = "State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow"
-groups = ["default", "dev"]
+groups = ["default"]
 dependencies = [
     "filelock",
     "huggingface-hub<1.0,>=0.19.3",
@@ -4351,7 +4351,7 @@ files = [
 name = "triton"
 version = "2.2.0"
 summary = "A language and compiler for custom Deep Learning operations"
-groups = ["default", "dev"]
+groups = ["default"]
 marker = "platform_system == \"Linux\" and platform_machine == \"x86_64\" and python_version < \"3.12\""
 dependencies = [
     "filelock",
@@ -4412,7 +4412,7 @@ name = "typing-extensions"
 version = "4.10.0"
 requires_python = ">=3.8"
 summary = "Backported and Experimental Type Hints for Python 3.8+"
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "typing_extensions-4.10.0-py3-none-any.whl", hash = "sha256:69b1a937c3a517342112fb4c6df7e72fc39a38e7891a5730ed4985b5214b5475"},
     {file = "typing_extensions-4.10.0.tar.gz", hash = "sha256:b0abd7c89e8fb96f98db18d86106ff1d90ab692004eb746cf6eda2682f91b3cb"},
@@ -4493,7 +4493,7 @@ name = "urllib3"
 version = "2.2.1"
 requires_python = ">=3.8"
 summary = "HTTP library with thread-safe connection pooling, file post, and more."
-groups = ["default", "dev"]
+groups = ["default"]
 files = [
     {file = "urllib3-2.2.1-py3-none-any.whl", hash = "sha256:450b20ec296a467077128bff42b73080516e71b56ff59a60a02bef2232c4fa9d"},
     {file = "urllib3-2.2.1.tar.gz", hash = "sha256:d0570876c61ab9e520d776c38acbbb5b05a776d3f9ff98a5c8fd5162a444cf19"},
